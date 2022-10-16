@@ -150,7 +150,7 @@ namespace CustomizePlus.Api
 
 		}
 
-		public void OnScaleUpdate(string bodyScaleString)
+		public void OnScaleUpdate(string? bodyScaleString)
 		{
 			PluginLog.Debug("Sending c+ ipc scale message.");
 			ProviderOnScaleUpdate?.SendMessage(bodyScaleString);

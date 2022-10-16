@@ -145,6 +145,7 @@ namespace CustomizePlus
 					{
 						renderManagerHook?.Disable();
 						PluginLog.Debug("Unhooking render function");
+						ipcManager.OnScaleUpdate(null);
 					}
 				}
 				catch (Exception e)
