@@ -106,6 +106,7 @@ namespace CustomizePlus.Interface
 					AddToConfig(this.newScaleName, this.newScaleCharacter);
 					config.Save();
 					Plugin.LoadConfig();
+					Plugin.UpdateIpc();
 				}
 			}
 
@@ -182,6 +183,10 @@ namespace CustomizePlus.Interface
 				{
 					this.UpdateCurrent("Root", new HkVector4(rootScaleLocal.X, rootScaleLocal.Y, rootScaleLocal.Z, rootScaleLocalTemp.W));
 				}
+			}
+			if (ImGui.IsItemDeactivatedAfterEdit() && config.AutomaticEditMode)
+			{
+				Plugin.UpdateIpc();
 			}
 
 			ImGui.Separator();
@@ -343,6 +348,10 @@ namespace CustomizePlus.Interface
 						this.UpdateCurrent(boneNameLocalLegacy, new HkVector4(currentVector4.X, currentVector4.Y, currentVector4.Z, currentVector4.W));
 					}
 				}
+				if (ImGui.IsItemDeactivatedAfterEdit() && config.AutomaticEditMode)
+				{
+					Plugin.UpdateIpc();
+				}
 
 
 				ImGui.PopID();
@@ -361,6 +370,7 @@ namespace CustomizePlus.Interface
 					this.originalScaleName = this.newScaleName;
 				config.Save();
 				Plugin.LoadConfig();
+				Plugin.UpdateIpc();
 			}
 
 			/* TODO feature: undo of some variety. Option below is a revert to what was present when edit was opened, but needs additonal logic
@@ -384,6 +394,7 @@ namespace CustomizePlus.Interface
 			ImGui.SameLine();
 			if (ImGui.Button("Cancel"))
 			{
+				Plugin.UpdateIpc();
 				this.Close();
 			}
 

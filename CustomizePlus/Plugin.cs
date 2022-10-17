@@ -40,6 +40,7 @@ namespace CustomizePlus
 		private static BodyScale? defaultRetainerScale;
 		private static BodyScale? defaultCutsceneScale;
 		private static CustomizePlusIpc ipcManager = null!;
+		private static string? lastIpcMessage = "";
 
 		public Plugin()
 		{
@@ -49,6 +50,7 @@ namespace CustomizePlus
 				ipcManager = new(ObjectTable, PluginInterface);
 
 				LoadConfig();
+				Plugin.UpdateIpc();
 
 				CommandManager.AddCommand((s, t) => ConfigurationInterface.Show(), "/customize", "Opens the Customize+ configuration window.");
 
@@ -131,21 +133,12 @@ namespace CustomizePlus
 						}
 
 						renderManagerHook.Enable();
-						PluginLog.Debug("Hooking render function");
-
-						//Get player's body scale string and send IPC message
-						string? playerName = GetPlayerName();
-						if (playerName != null) {	
-							BodyScale? playerScale = GetBodyScale(playerName);
-							ipcManager.OnScaleUpdate(JsonConvert.SerializeObject(playerScale));
-						}
-						
+						PluginLog.Debug("Hooking render function");					
 					}
 					else
 					{
 						renderManagerHook?.Disable();
 						PluginLog.Debug("Unhooking render function");
-						ipcManager.OnScaleUpdate(null);
 					}
 				}
 				catch (Exception e)
@@ -237,6 +230,42 @@ namespace CustomizePlus
 			}
 		}
 
+		public static void UpdateIpc()
+		{
+			if (Configuration.Enable)
+			{
+				//Get player's body scale string and send IPC message
+				string? playerName = GetPlayerName();
+				if (playerName != null)
+				{
+					BodyScale? playerScale = GetBodyScale(playerName);
+					string? currentMessage = null;
+					if (playerScale != null)
+					{
+						currentMessage = JsonConvert.SerializeObject(playerScale);
+					}
+					if (currentMessage != lastIpcMessage) {
+						ipcManager.OnScaleUpdate(currentMessage);
+						lastIpcMessage = currentMessage;
+					} else
+					{
+						//PluginLog.LogDebug("Didn't send unchanged IPC message");
+					}
+				}
+			}
+			else
+			{
+				if (lastIpcMessage != null)
+				{
+					ipcManager.OnScaleUpdate(null);
+					lastIpcMessage = null;
+				} else
+				{
+					//PluginLog.LogDebug("Didn't send unchanged IPC message");
+				}
+			}
+		}
+
 		public static GameObject? FindModelByName(string name)
 		{
 			foreach (GameObject obj in ObjectTable)
@@ -250,6 +279,7 @@ namespace CustomizePlus
 
 		public void Dispose()
 		{
+			ipcManager.OnScaleUpdate(null);
 			ipcManager?.Dispose();
 
 			renderManagerHook?.Disable();

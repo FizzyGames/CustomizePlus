@@ -56,6 +56,7 @@ namespace CustomizePlus.Interface
 				{
 					config.Save();
 					Plugin.LoadConfig();
+					Plugin.UpdateIpc();
 				}
 			}
 
@@ -192,6 +193,7 @@ namespace CustomizePlus.Interface
 					if (config.AutomaticEditMode)
 					{
 						Plugin.LoadConfig();
+						Plugin.UpdateIpc();
 					}
 				}
 
@@ -236,6 +238,7 @@ namespace CustomizePlus.Interface
 			{
 				config.Save();
 				Plugin.LoadConfig();
+				Plugin.UpdateIpc();
 			}
 
 			ImGui.SameLine();

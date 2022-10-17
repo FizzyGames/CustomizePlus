@@ -39,6 +39,7 @@ namespace CustomizePlus.Interface
 
 		public virtual void Close()
 		{
+			Plugin.UpdateIpc();
 			this.IsOpen = false;
 		}
 
