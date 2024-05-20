@@ -112,6 +112,38 @@ namespace CustomizePlus.Helpers
             }
         }
 
+        public static void StaticLabelWithIconOnBothSides(FontAwesomeIcon icon, string? text, TextAlignment align = TextAlignment.Left, string tooltip = "")
+        {
+            if (text != null)
+            {
+                if (align == TextAlignment.Center)
+                {
+                    ImGui.Dummy(new System.Numerics.Vector2((ImGui.GetContentRegionAvail().X - ImGui.CalcTextSize(text).X - 30) / 2, 0));
+                    ImGui.SameLine();
+                }
+                else if (align == TextAlignment.Right)
+                {
+                    ImGui.Dummy(new System.Numerics.Vector2(ImGui.GetContentRegionAvail().X - ImGui.CalcTextSize(text).X - 30, 0));
+                    ImGui.SameLine();
+                }
+
+                ImGui.PushFont(UiBuilder.IconFont);
+                ImGui.Text(icon.ToIconString());
+                ImGui.PopFont();
+                ImGui.SameLine();
+                ImGui.Text(text);
+                ImGui.SameLine();
+                ImGui.PushFont(UiBuilder.IconFont);
+                ImGui.Text(icon.ToIconString());
+                ImGui.PopFont();
+
+                if (!tooltip.IsNullOrWhitespace())
+                {
+                    AddHoverText(tooltip);
+                }
+            }
+        }
+
         public static void LabelWithIcon(FontAwesomeIcon icon, string text)
         {
             ImGui.SameLine();
